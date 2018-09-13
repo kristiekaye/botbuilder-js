@@ -32,6 +32,7 @@ export class BotConfiguration extends BotConfigurationBase {
         Object.assign(botConfig, source);
         botConfig.services = services;
         botConfig.migrateData();
+
         return botConfig;
     }
 
@@ -291,12 +292,11 @@ export class BotConfiguration extends BotConfigurationBase {
                                 options.progress(service, command, index, this.services.length);
                             }
                             let p = await exec(command);
-                            var json = p.stdout;
+                            var jsonDispatch = p.stdout;
                             // make sure it's json
-                            JSON.parse(json);
-                            await fsx.writeFile(folder + `/${luisService.id}.luis`, json, { encoding: 'utf8' });
-                        }
-                        else {
+                            JSON.parse(jsonDispatch);
+                            await fsx.writeFile(`${folder}/${luisService.id}.luis`, jsonDispatch, { encoding: 'utf8' });
+                        } else {
                             if (options.progress) {
                                 options.progress(service, '', index, this.services.length);
                             }
@@ -320,12 +320,11 @@ export class BotConfiguration extends BotConfigurationBase {
                                 options.progress(service, command, index, this.services.length);
                             }
                             let p = await exec(command);
-                            var json = p.stdout;
+                            var jsonLuis = p.stdout;
                             // make sure it's json
-                            JSON.parse(json);
-                            await fsx.writeFile(folder + `/${luisService.id}.luis`, json, { encoding: 'utf8' });
-                        }
-                        else {
+                            JSON.parse(jsonLuis);
+                            await fsx.writeFile(`${ folder }/${luisService.id}.luis`, jsonLuis, { encoding: 'utf8' });
+                        } else {
                             if (options.progress) {
                                 options.progress(service, '', index, this.services.length);
                             }
@@ -349,12 +348,11 @@ export class BotConfiguration extends BotConfigurationBase {
                                 options.progress(service, command, index, this.services.length);
                             }
                             let p = await exec(command);
-                            var json = p.stdout;
+                            var jsonQnA = p.stdout;
                             // make sure it's json
-                            JSON.parse(json);
-                            await fsx.writeFile(folder + `/${qnaService.id}.qna`, json, { encoding: 'utf8' });
-                        }
-                        else {
+                            JSON.parse(jsonQnA);
+                            await fsx.writeFile(`${ folder }/${qnaService.id}.qna`, jsonQnA, { encoding: 'utf8' });
+                        } else {
                             if (options.progress) {
                                 options.progress(service, '', index, this.services.length);
                             }
@@ -409,6 +407,7 @@ export class BotConfiguration extends BotConfigurationBase {
                             id: service.id,
                             name: service.name,
                             database: (<ICosmosDBService>service).database,
+                            // tslint:disable-next-line:trailing-comma
                             collection: (<ICosmosDBService>service).collection,
                         };
                         recipe.resources.push(cosmosDBResource);
@@ -424,6 +423,7 @@ export class BotConfiguration extends BotConfigurationBase {
                             type: ServiceTypes.File,
                             id: service.id,
                             name: service.name,
+                            // tslint:disable-next-line:trailing-comma
                             path: (<IFileService>service).path,
                         };
                         recipe.resources.push(fileResource);
@@ -442,6 +442,7 @@ export class BotConfiguration extends BotConfigurationBase {
                             id: service.id,
                             name: service.name,
                             url: genericService.url,
+                            // tslint:disable-next-line:trailing-comma
                             configuration: genericService.configuration,
                         };
                         recipe.resources.push(genericResource);
@@ -485,7 +486,8 @@ export class BotConfiguration extends BotConfigurationBase {
                     break;
             }
         }
-        await fsx.writeFile(folder + `/bot.recipe`, JSON.stringify(recipe, null, 2), { encoding: 'utf8' });
+        await fsx.writeFile(`${ folder }/bot.recipe`, JSON.stringify(recipe, null, 2), { encoding: 'utf8' });
+
         return recipe;
     }
 }

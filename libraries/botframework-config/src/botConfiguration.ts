@@ -425,8 +425,9 @@ export class BotConfiguration extends BotConfigurationBase {
                         if (options.progress) {
                             options.progress(service, '', index, this.services.length);
                         }
-                        // tslint:disable-next-line:max-line-length
-                        console.warn(`WARNING: Generic services cannot be cloned and all configuration data will be passed unchanged and unencrypted `);
+                        console.warn(`WARNING: ` +
+                                     `Generic services cannot be cloned and all configuration data ` +
+                                     `will be passed unchanged and unencrypted `);
                         const genericService: IGenericService = <IGenericService>service;
                         const genericResource: IGenericResource = {
                             type: ServiceTypes.Generic,

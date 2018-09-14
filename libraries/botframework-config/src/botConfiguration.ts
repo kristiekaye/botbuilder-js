@@ -9,11 +9,14 @@ import * as txtfile from 'read-text-file';
 import * as util from 'util';
 import * as uuid from 'uuid';
 import { BotConfigurationBase } from './botConfigurationBase';
-import { BotRecipe, IBlobResource, ICosmosDBResource, IDispatchResource, IFileResource, IGenericResource, IResource, IUrlResource } from './botRecipe';
+import { BotRecipe, IBlobResource, ICosmosDBResource, IDispatchResource,
+         IFileResource, IGenericResource, IResource, IUrlResource } from './botRecipe';
 import * as encrypt from './encrypt';
 import { ExportOptions } from './exportOptions';
 import { ConnectedService } from './models';
-import { IBlobStorageService, IBotConfiguration, IConnectedService, ICosmosDBService, IDispatchService, IEndpointService, IFileService, IGenericService, ILuisService, IQnAService, ServiceTypes } from './schema';
+import { IBlobStorageService, IBotConfiguration, IConnectedService,
+         ICosmosDBService, IDispatchService, IEndpointService, IFileService,
+         IGenericService, ILuisService, IQnAService, ServiceTypes } from './schema';
 // tslint:disable-next-line:no-var-requires no-require-imports
 let exec = util.promisify(require('child_process').exec);
 
@@ -267,7 +270,8 @@ export class BotConfiguration extends BotConfigurationBase {
                     {
                         const luisService: ILuisService = <ILuisService>service;
                         if (options.download) {
-                            const command: string = `luis export version --appId ${luisService.appId} --authoringKey ${luisService.authoringKey} --versionId "${luisService.version}"`;
+                            const command: string = `luis export version --appId ${luisService.appId} ` +
+                                          `--authoringKey ${luisService.authoringKey} --versionId "${luisService.version}"`;
                             if (options.progress) {
                                 options.progress(service, command, index, this.services.length);
                             }
@@ -296,7 +300,8 @@ export class BotConfiguration extends BotConfigurationBase {
                     {
                         const luisService: ILuisService = <ILuisService>service;
                         if (options.download) {
-                            const command: string = `luis export version --appId ${luisService.appId} --authoringKey ${luisService.authoringKey} --versionId "${luisService.version}"`;
+                            const command: string = `luis export version --appId ${luisService.appId} ` +
+                                          `--authoringKey ${luisService.authoringKey} --versionId "${luisService.version}"`;
                             if (options.progress) {
                                 options.progress(service, command, index, this.services.length);
                             }
@@ -325,7 +330,9 @@ export class BotConfiguration extends BotConfigurationBase {
                     {
                         const qnaService: IQnAService = <IQnAService>service;
                         if (options.download) {
-                            const command: string = `qnamaker export kb --kbId ${qnaService.kbId} --environment prod --subscriptionKey ${qnaService.subscriptionKey} --hostname ${qnaService.hostname} --endpointKey ${qnaService.endpointKey}`;
+                            const command: string = `qnamaker export kb --kbId ${qnaService.kbId} --environment prod ` +
+                                          `--subscriptionKey ${qnaService.subscriptionKey} --hostname ${qnaService.hostname} ` +
+                                          `--endpointKey ${qnaService.endpointKey}`;
                             if (options.progress) {
                                 options.progress(service, command, index, this.services.length);
                             }
@@ -418,6 +425,7 @@ export class BotConfiguration extends BotConfigurationBase {
                         if (options.progress) {
                             options.progress(service, '', index, this.services.length);
                         }
+                        // tslint:disable-next-line:max-line-length
                         console.warn(`WARNING: Generic services cannot be cloned and all configuration data will be passed unchanged and unencrypted `);
                         const genericService: IGenericService = <IGenericService>service;
                         const genericResource: IGenericResource = {

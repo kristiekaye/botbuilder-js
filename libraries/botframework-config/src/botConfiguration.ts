@@ -18,7 +18,7 @@ import { IBlobStorageService, IBotConfiguration, IConnectedService,
          ICosmosDBService, IDispatchService, IEndpointService, IFileService,
          IGenericService, ILuisService, IQnAService, ServiceTypes } from './schema';
 // tslint:disable-next-line:no-var-requires no-require-imports
-let exec = util.promisify(require('child_process').exec);
+const exec: Function = util.promisify(require('child_process').exec);
 
 interface InternalBotConfig {
     location?: string;
@@ -276,7 +276,7 @@ export class BotConfiguration extends BotConfigurationBase {
                                 options.progress(service, command, index, this.services.length);
                             }
                             // tslint:disable-next-line:typedef
-                            let p = await exec(command);
+                            const p = await exec(command);
                             const jsonDispatch: string = p.stdout;
                             // make sure it's json
                             JSON.parse(jsonDispatch);
@@ -337,7 +337,7 @@ export class BotConfiguration extends BotConfigurationBase {
                                 options.progress(service, command, index, this.services.length);
                             }
                             // tslint:disable-next-line:typedef
-                            let p = await exec(command);
+                            const p = await exec(command);
                             const jsonQnA: string = p.stdout;
                             // make sure it's json
                             JSON.parse(jsonQnA);

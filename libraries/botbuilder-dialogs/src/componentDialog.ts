@@ -82,7 +82,7 @@ export class ComponentDialog<O extends object = {}> extends Dialog<O> {
             const dialogState: any = instance.state[PERSISTED_DIALOG_STATE];
             const innerDC: DialogContext = new DialogContext(this.dialogs, context, dialogState);
             await innerDC.cancelAllDialogs();
-        } 
+        }
 
         // Notify component
         await this.onEndDialog(context, instance, reason);

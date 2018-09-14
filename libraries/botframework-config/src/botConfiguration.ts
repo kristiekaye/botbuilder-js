@@ -252,28 +252,28 @@ export class BotConfiguration extends BotConfigurationBase {
     // export the services from the bot file as resource files and recipe file
     // tslint:disable-next-line:cyclomatic-complexity
     public async export(folder: string, exportOptions?: Partial<ExportOptions>): Promise<BotRecipe> {
-        let options: Partial<ExportOptions> = { download: true, ...exportOptions};
+        const options: Partial<ExportOptions> = { download: true, ...exportOptions};
 
-        let recipe: BotRecipe = new BotRecipe();
+        const recipe: BotRecipe = new BotRecipe();
 
         await fsx.ensureDir(folder);
 
         let index: number = 0;
-        for (let service of this.services) {
+        for (const service of this.services) {
             index++;
 
             switch (service.type) {
                 case ServiceTypes.Dispatch:
                     {
-                        let luisService: ILuisService = <ILuisService>service;
+                        const luisService: ILuisService = <ILuisService>service;
                         if (options.download) {
-                            let command: string = `luis export version --appId ${luisService.appId} --authoringKey ${luisService.authoringKey} --versionId "${luisService.version}"`;
+                            const command: string = `luis export version --appId ${luisService.appId} --authoringKey ${luisService.authoringKey} --versionId "${luisService.version}"`;
                             if (options.progress) {
                                 options.progress(service, command, index, this.services.length);
                             }
                             // tslint:disable-next-line:typedef
                             let p = await exec(command);
-                            var jsonDispatch: string = p.stdout;
+                            const jsonDispatch: string = p.stdout;
                             // make sure it's json
                             JSON.parse(jsonDispatch);
                             await fsx.writeFile(`${folder}/${luisService.id}.luis`, jsonDispatch, { encoding: 'utf8' });
@@ -283,7 +283,7 @@ export class BotConfiguration extends BotConfigurationBase {
                             }
                         }
 
-                        let dispatchResource: IDispatchResource = {
+                        const dispatchResource: IDispatchResource = {
                             type: service.type,
                             id: service.id,
                             name: service.name,
@@ -294,15 +294,15 @@ export class BotConfiguration extends BotConfigurationBase {
                     break;
                 case ServiceTypes.Luis:
                     {
-                        let luisService: ILuisService = <ILuisService>service;
+                        const luisService: ILuisService = <ILuisService>service;
                         if (options.download) {
-                            let command: string = `luis export version --appId ${luisService.appId} --authoringKey ${luisService.authoringKey} --versionId "${luisService.version}"`;
+                            const command: string = `luis export version --appId ${luisService.appId} --authoringKey ${luisService.authoringKey} --versionId "${luisService.version}"`;
                             if (options.progress) {
                                 options.progress(service, command, index, this.services.length);
                             }
                             // tslint:disable-next-line:typedef
-                            let p = await exec(command);
-                            var jsonLuis: string = p.stdout;
+                            const p = await exec(command);
+                            const jsonLuis: string = p.stdout;
                             // make sure it's json
                             JSON.parse(jsonLuis);
                             await fsx.writeFile(`${ folder }/${luisService.id}.luis`, jsonLuis, { encoding: 'utf8' });
@@ -312,7 +312,7 @@ export class BotConfiguration extends BotConfigurationBase {
                             }
                         }
 
-                        let resource: IResource = {
+                        const resource: IResource = {
                             type: service.type,
                             id: service.id,
                             name: service.name
@@ -323,15 +323,15 @@ export class BotConfiguration extends BotConfigurationBase {
 
                 case ServiceTypes.QnA:
                     {
-                        let qnaService: IQnAService = <IQnAService>service;
+                        const qnaService: IQnAService = <IQnAService>service;
                         if (options.download) {
-                            let command: string = `qnamaker export kb --kbId ${qnaService.kbId} --environment prod --subscriptionKey ${qnaService.subscriptionKey} --hostname ${qnaService.hostname} --endpointKey ${qnaService.endpointKey}`;
+                            const command: string = `qnamaker export kb --kbId ${qnaService.kbId} --environment prod --subscriptionKey ${qnaService.subscriptionKey} --hostname ${qnaService.hostname} --endpointKey ${qnaService.endpointKey}`;
                             if (options.progress) {
                                 options.progress(service, command, index, this.services.length);
                             }
                             // tslint:disable-next-line:typedef
                             let p = await exec(command);
-                            var jsonQnA: string = p.stdout;
+                            const jsonQnA: string = p.stdout;
                             // make sure it's json
                             JSON.parse(jsonQnA);
                             await fsx.writeFile(`${ folder }/${qnaService.id}.qna`, jsonQnA, { encoding: 'utf8' });
@@ -341,7 +341,7 @@ export class BotConfiguration extends BotConfigurationBase {
                             }
                         }
 
-                        let resource: IResource = {
+                        const resource: IResource = {
                             type: service.type,
                             id: service.id,
                             name: service.name
@@ -355,7 +355,7 @@ export class BotConfiguration extends BotConfigurationBase {
                         if (options.progress) {
                             options.progress(service, '', index, this.services.length);
                         }
-                        let endpointResource: IUrlResource = {
+                        const endpointResource: IUrlResource = {
                             type: ServiceTypes.Endpoint,
                             id: service.id,
                             name: service.name,
@@ -370,7 +370,7 @@ export class BotConfiguration extends BotConfigurationBase {
                         if (options.progress) {
                             options.progress(service, '', index, this.services.length);
                         }
-                        let blobResource: IBlobResource = {
+                        const blobResource: IBlobResource = {
                             type: ServiceTypes.BlobStorage,
                             id: service.id,
                             name: service.name,
@@ -385,7 +385,7 @@ export class BotConfiguration extends BotConfigurationBase {
                         if (options.progress) {
                             options.progress(service, '', index, this.services.length);
                         }
-                        let cosmosDBResource: ICosmosDBResource = {
+                        const cosmosDBResource: ICosmosDBResource = {
                             type: ServiceTypes.CosmosDB,
                             id: service.id,
                             name: service.name,
@@ -402,7 +402,7 @@ export class BotConfiguration extends BotConfigurationBase {
                         if (options.progress) {
                             options.progress(service, '', index, this.services.length);
                         }
-                        let fileResource: IFileResource = {
+                        const fileResource: IFileResource = {
                             type: ServiceTypes.File,
                             id: service.id,
                             name: service.name,
@@ -419,8 +419,8 @@ export class BotConfiguration extends BotConfigurationBase {
                             options.progress(service, '', index, this.services.length);
                         }
                         console.warn(`WARNING: Generic services cannot be cloned and all configuration data will be passed unchanged and unencrypted `);
-                        let genericService: IGenericService = <IGenericService>service;
-                        let genericResource: IGenericResource = {
+                        const genericService: IGenericService = <IGenericService>service;
+                        const genericResource: IGenericResource = {
                             type: ServiceTypes.Generic,
                             id: service.id,
                             name: service.name,
@@ -438,7 +438,7 @@ export class BotConfiguration extends BotConfigurationBase {
                             options.progress(service, '', index, this.services.length);
                         }
 
-                        let resource: IResource = {
+                        const resource: IResource = {
                             type: service.type,
                             id: service.id,
                             name: service.name
@@ -452,7 +452,7 @@ export class BotConfiguration extends BotConfigurationBase {
                         if (options.progress) {
                             options.progress(service, '', index, this.services.length);
                         }
-                        let resource: IResource = {
+                        const resource: IResource = {
                             type: service.type,
                             id: service.id,
                             name: service.name

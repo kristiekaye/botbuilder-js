@@ -102,7 +102,6 @@
         "myWorkerSize": 0,
         "proactiveFunctionName": "[concat(parameters('siteName'), '-function')]",
         "insightsName": "[concat(parameters('botId'), substring(uniqueString(resourceGroup().id), 0, 6))]",
-        },
         "botAppKinds": {
             "function": "functionapp",
             "sdk": "app",

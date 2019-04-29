@@ -196,11 +196,6 @@
             "apiVersion": "2017-12-01",
             "name": "[parameters('botId')]",
             "location": "global",
-            "dependsOn": [
-                "[parameters('serverFarmId')]",
-                "[resourceId('Microsoft.Web/sites/', parameters('siteName'))]",
-                "MSDeploy"
-            ],
             "sku": {
                 "name": "[parameters('sku')]"
             },

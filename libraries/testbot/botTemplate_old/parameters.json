@@ -12,7 +12,7 @@
             "value": "Central US"
         },
         "sku": {
-            "value": "F0"
+            "value": "S1"
         },
         "kind": {
             "value": "sdk"
@@ -42,7 +42,7 @@
             "value": ""
         },
         "zipUrl": {
-            "value": "https://bot-framework.azureedge.net/static/55880-71cb3dea03/bot-packages/v1.3.15/csharp-abs-webapp-v4_basic_precompiled.zip"
+            "value": ""
         },
         "proactiveZipUrl": {
             "value": ""
@@ -52,6 +52,24 @@
         },
         "appInsightsLocation": {
             "value": "East US"
+        },
+        "serverFarmId": {
+            "value": ""
+        },
+        "createServerFarm": {
+            "value": true
+        },
+        "serverFarmLocation": {
+            "value": "Central US"
+        },
+        "serverFarmSku": {
+            "value": {
+                "name": "S1",
+                "tier": "Standard",
+                "size": "S1",
+                "family": "S",
+                "capacity": 1
+            }
         },
         "endpoint": {
             "value": ""

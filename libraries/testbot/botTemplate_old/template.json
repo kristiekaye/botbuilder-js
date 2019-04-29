@@ -61,6 +61,26 @@
         "appInsightsLocation": {
             "type": "String"
         },
+        "serverFarmId": {
+            "type": "String"
+        },
+        "createServerFarm": {
+            "type": "Bool"
+        },
+        "serverFarmLocation": {
+            "defaultValue": "",
+            "type": "String"
+        },
+        "serverFarmSku": {
+            "defaultValue": {
+                "name": "S1",
+                "tier": "Standard",
+                "size": "S1",
+                "family": "S",
+                "capacity": 1
+            },
+            "type": "Object"
+        },
         "endpoint": {
             "defaultValue": "",
             "type": "String"
@@ -82,45 +102,12 @@
         "myWorkerSize": 0,
         "proactiveFunctionName": "[concat(parameters('siteName'), '-function')]",
         "insightsName": "[concat(parameters('botId'), substring(uniqueString(resourceGroup().id), 0, 6))]",
-        "config": {
-            "scratch": {
-                "stateEndpoint": "",
-                "azureWebJobsBotFrameworkDirectLineEndpoint": "https://directline.scratch.botframework.com/",
-                "openIdMetadata": "https://login.scratch.botframework.com/v1/.well-known/openidconfiguration",
-                "channelService": ""
-            },
-            "ppe": {
-                "stateEndpoint": "",
-                "azureWebJobsBotFrameworkDirectLineEndpoint": "https://directline.ppe.botframework.com/",
-                "openIdMetadata": "https://login.ppe.botframework.com/v1/.well-known/openidconfiguration",
-                "channelService": ""
-            },
-            "prod": {
-                "stateEndpoint": "",
-                "azureWebJobsBotFrameworkDirectLineEndpoint": "https://directline.botframework.com/",
-                "openIdMetadata": "",
-                "channelService": ""
-            },
-            "usgovppe": {
-                "stateEndpoint": "",
-                "azureWebJobsBotFrameworkDirectLineEndpoint": "https://directline.ppe.botframework.azure.us/",
-                "openIdMetadata": "https://login.ppe.botframework.azure.us/v1/.well-known/openidconfiguration",
-                "channelService": "https://botframework.azure.us"
-            },
-            "usgovprd": {
-                "stateEndpoint": "",
-                "azureWebJobsBotFrameworkDirectLineEndpoint": "https://directline.botframework.azure.us/",
-                "openIdMetadata": "",
-                "channelService": "https://botframework.azure.us"
-            }
-        },
         "botAppKinds": {
             "function": "functionapp",
             "sdk": "app",
             "bot": ""
         },
         "botAppKind": "[variables('botAppKinds')[parameters('kind')]]",
-        "currentConfig": "[variables('config')[toLower(parameters('botEnv'))]]",
         "siteHost": "[concat(parameters('siteName'), '.azurewebsites.net')]",
         "botEndpointConfig": {
             "bot": "[parameters('endpoint')]",
@@ -148,7 +135,9 @@
             "apiVersion": "2015-08-01",
             "name": "[parameters('siteName')]",
             "location": "[parameters('location')]",
-            "dependsOn": [],
+            "dependsOn": [
+                "[parameters('serverFarmId')]"
+            ],
             "kind": "[variables('botAppKind')]",
             "properties": {
                 "name": "[parameters('siteName')]",
@@ -166,14 +155,6 @@
                         {
                             "name": "MicrosoftAppPassword",
                             "value": "[parameters('appSecret')]"
-                        },
-                        {
-                            "name": "LuisAPIKey",
-                            "value": "e5a0ff8776b64b09b4889a0185e519a1"
-                        },
-                        {
-                            "name": "LuisAppId",
-                            "value": "81f08ff1-c0d7-48a0-b6aa-b8cd6c7d7b81"
                         },
                         {
                             "name": "LuisAPIHostName",
@@ -215,10 +196,6 @@
             "apiVersion": "2017-12-01",
             "name": "[parameters('botId')]",
             "location": "global",
-            "dependsOn": [
-                "[resourceId('Microsoft.Web/sites/', parameters('siteName'))]",
-                "MSDeploy"
-            ],
             "sku": {
                 "name": "[parameters('sku')]"
             },

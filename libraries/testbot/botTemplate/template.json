@@ -108,7 +108,6 @@
             "bot": ""
         },
         "botAppKind": "[variables('botAppKinds')[parameters('kind')]]",
-        "currentConfig": "[variables('config')[toLower(parameters('botEnv'))]]",
         "siteHost": "[concat(parameters('siteName'), '.azurewebsites.net')]",
         "botEndpointConfig": {
             "bot": "[parameters('endpoint')]",

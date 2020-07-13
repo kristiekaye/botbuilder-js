@@ -5,6 +5,33 @@ const { Activity } = require('botframework-connector/lib/connectorApi/models/map
 const { spy } = require('sinon');
 const { send } = require('process');
 
+class MockResponse {
+    constructor(expects, done) {
+        this.expects = expects;
+        this.statusCode = 0;
+        this.body = {};
+        this.done = done;
+    }
+
+    end() {
+        try {
+            assert.deepStrictEqual(this.statusCode, this.expects.statusCode, 'not equal');
+            assert.deepStrictEqual(this.body, this.expects.body, 'not equal');
+            this.done();
+        } catch (error) {
+            console.log('error')
+            this.done(error)
+        }
+    }
+
+    status(code) {
+        this.statusCode = code;
+    }
+
+    send(body) {
+        this.body = body;
+    }
+}
 
 class ExposedChannelServiceRoutes extends ChannelServiceRoutes {
     processSendToConversation(req, res) {
@@ -104,36 +131,33 @@ describe('channelServiceRoutes', function() {
 
     describe('private functions', () => {
         describe('processSendToConversation()', () => {
-            this.timeout(10000);
-            it('should do something', async (done) => {
-                let req = sinon.mock(WebRequest);
-                req.headers = { authorization: '' };
-                req.params = { conversationId: ' testId' };
-                req.body = {
-                    type: 'testactivity',
-                    timestamp: Date.now(),
-                    expiration: '2200-01-01',
-                    localTimeStamp: Date.now(),
-                };
+            it('should do something', (done) => {
+                try {
+                    const resourceResponse = { id: 'random' };
 
-                let res = {
-                    status: sinon.spy(),
-                    end: () => {
-                        console.log('>>>FIRST')
-                    },
-                    send: sinon.spy()
-                };
+                    var service = sinon.createStubInstance(ChannelServiceHandler);
 
-                var service = sinon.createStubInstance(ChannelServiceHandler);
-                service.handleSendToConversation.resolves({id: 'testRR'});
+                    service.handleSendToConversation = sinon.stub().resolves(resourceResponse)
 
-                let channel = new ExposedChannelServiceRoutes(service);
+                    let channel = new ChannelServiceRoutes(service);
 
-                let result = new Promise(() => channel.processSendToConversation(req, res));
-                await result;
+                    const req = {
+                        body: {
+                            type: ''
+                        },
+                        headers:{},
+                        params:{}
+                    };
 
-                console.log('>>>LAST');
-                assert(res.status.called);
+                    let res = new MockResponse({
+                        statusCode: 300,
+                        body: resourceResponse
+                    }, done);
+
+                    channel.processSendToConversation(req, res)
+                } catch (error) {
+                    done(error);
+                }
             });
         });
 

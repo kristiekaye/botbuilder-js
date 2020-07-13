@@ -38,7 +38,7 @@
     "chatdown": "^1.0.2",
     "mocha": "^5.2.0",
     "nock": "^11.9.1",
-    "nyc": "^15.0.0",
+    "nyc": "^15.1.0",
     "source-map-support": "^0.5.3",
     "ts-node": "^4.1.0",
     "typescript": "3.5.3",
@@ -46,6 +46,8 @@
   },
   "scripts": {
     "test": "tsc && nyc mocha --recursive \"tests/**/*.test.js\"",
+    "test2": "tsc && nyc mocha \"tests/channelServiceRoutes.test.js\"",
+    "test-coverage": "lerna run build && nyc mocha \"tests/**/*.test.js\" && nyc report --reporter=html",
     "build": "tsc",
     "build-docs": "typedoc --theme markdown --entryPoint botbuilder --excludePrivate --includeDeclarations --ignoreCompilerErrors --module amd --out ..\\..\\doc\\botbuilder .\\lib\\index.d.ts ..\\botbuilder-core\\lib\\index.d.ts ..\\botframework-schema\\lib\\index.d.ts --hideGenerator --name \"Bot Builder SDK\" --readme none",
     "build:rollup": "npm run clean && npm run build && api-extractor run --verbose --local",

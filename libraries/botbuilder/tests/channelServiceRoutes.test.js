@@ -1,9 +1,6 @@
-const { ChannelServiceRoutes, ChannelServiceHandler, WebRequest, WebResponse, StatusCodes } = require('../');
+const { ChannelServiceRoutes, ChannelServiceHandler, WebRequest, StatusCodes } = require('../');
 const assert = require('assert');
 const sinon = require('sinon');
-const { Activity } = require('botframework-connector/lib/connectorApi/models/mappers');
-const { spy } = require('sinon');
-const { send } = require('process');
 
 class MockResponse {
     constructor(expects, done) {
@@ -18,9 +15,8 @@ class MockResponse {
             assert.deepStrictEqual(this.statusCode, this.expects.statusCode, 'not equal');
             assert.deepStrictEqual(this.body, this.expects.body, 'not equal');
             this.done();
-        } catch (error) {
-            console.log('error')
-            this.done(error)
+        } catch (err) {
+            this.done(err);
         }
     }
 
@@ -31,64 +27,6 @@ class MockResponse {
     send(body) {
         this.body = body;
     }
-}
-
-class ExposedChannelServiceRoutes extends ChannelServiceRoutes {
-    processSendToConversation(req, res) {
-        super.processSendToConversation(req, res);
-    };
-
-    processReplyToActivity(req, res) {
-        super.processReplyToActivity(req, res);
-    };
-
-    processUpdateActivity(req, res) {
-        super.processUpdateActivity(req, res);
-    };
-
-    processDeleteActivity(req, res) {
-        super.processDeleteActivity(req, res);
-    };
-
-    processGetActivityMembers(req, res) {
-        super.processGetActivityMembers(req, res);
-    };
-
-    processCreateConversation(req, res) {
-        super.processCreateConversation(req, res);
-    };
-
-    processGetConversations(req, res) {
-        super.processGetConversations(req, res);
-    };
-
-    processGetConversationMembers(req, res) {
-        super.processGetConversationMembers(req, res);
-    };
-
-    processGetConversationPagedMembers(req, res) {
-        super.processGetConversationPagedMembers(req, res);
-    };
-
-    processDeleteConversationMember(req, res) {
-        super.processDeleteConversationMember(req, res);
-    };
-
-    processSendConversationHistory(req, res) {
-        super.processSendConversationHistory(req, res);
-    };
-
-    processUploadAttachment(req, res) {
-        super.processUploadAttachment(req, res);
-    };
-
-    static async readActivity(req) {
-        return ChannelServiceRoutes.readActivity(req);
-    };
-
-    static async readBody(req) {
-        return ChannelServiceRoutes.readBody(req);
-    };
 }
 
 describe('channelServiceRoutes', function() {
@@ -130,34 +68,241 @@ describe('channelServiceRoutes', function() {
     });
 
     describe('private functions', () => {
+        const req = {
+            body: {
+                type: ''
+            },
+            headers:{},
+            params:{},
+            query: {}
+        };
+        const testResource = { id: 'testId' };
+
         describe('processSendToConversation()', () => {
-            it('should do something', (done) => {
+            it('should end successful', (done) => {
                 try {
-                    const resourceResponse = { id: 'random' };
-
-                    var service = sinon.createStubInstance(ChannelServiceHandler);
-
-                    service.handleSendToConversation = sinon.stub().resolves(resourceResponse)
-
-                    let channel = new ChannelServiceRoutes(service);
-
-                    const req = {
-                        body: {
-                            type: ''
-                        },
-                        headers:{},
-                        params:{}
-                    };
-
                     let res = new MockResponse({
-                        statusCode: 300,
-                        body: resourceResponse
+                        statusCode: 200,
+                        body: testResource
                     }, done);
 
-                    channel.processSendToConversation(req, res)
+                    let service = sinon.createStubInstance(ChannelServiceHandler);
+                    service.handleSendToConversation = sinon.stub().resolves(testResource);
+
+                    let channel = new ChannelServiceRoutes(service);
+                    channel.processSendToConversation(req, res);
+                } catch (err) {
+                    done(err);
+                }
+            });
+        });
+
+        describe('processReplyToActivity()', () => {
+            it('should end successful', (done) => {
+                try{
+                    let res = new MockResponse({
+                        statusCode: 200,
+                        body: testResource
+                    }, done);
+
+                    let service = sinon.createStubInstance(ChannelServiceHandler);
+                    service.handleReplyToActivity = sinon.stub().resolves(testResource);
+
+                    let channel = new ChannelServiceRoutes(service);
+                    channel.processReplyToActivity(req, res);
                 } catch (error) {
                     done(error);
-                }
+                } 
+            });
+        });
+
+        describe('processUpdateActivity()', () => {
+            it('should end successful', (done) => {
+                try{
+                    let res = new MockResponse({
+                        statusCode: 200,
+                        body: testResource
+                    }, done);
+
+                    let service = sinon.createStubInstance(ChannelServiceHandler);
+                    service.handleUpdateActivity = sinon.stub().resolves(testResource);
+
+                    let channel = new ChannelServiceRoutes(service);
+                    channel.processUpdateActivity(req, res);
+                } catch (error) {
+                    done(error);
+                } 
+            });
+        });
+
+        describe('processDeleteActivity()', () => {
+            it('should end successful', (done) => {
+                try{
+                    let res = new MockResponse({
+                        statusCode: 200,
+                        body: {}
+                    }, done);
+
+                    let service = sinon.createStubInstance(ChannelServiceHandler);
+                    service.handleDeleteActivity = sinon.stub().resolves();
+
+                    let channel = new ChannelServiceRoutes(service);
+                    channel.processDeleteActivity(req, res);
+                } catch (error) {
+                    done(error);
+                } 
+            });
+        });
+
+        describe('processGetActivityMembers()', () => {
+            it('should end successful', (done) => {
+                try{
+                    let res = new MockResponse({
+                        statusCode: 200,
+                        body: testResource
+                    }, done);
+
+                    let service = sinon.createStubInstance(ChannelServiceHandler);
+                    service.handleGetActivityMembers = sinon.stub().resolves(testResource);
+
+                    let channel = new ChannelServiceRoutes(service);
+                    channel.processGetActivityMembers(req, res);
+                } catch (error) {
+                    done(error);
+                } 
+            });
+        });
+
+        describe('processCreateConversation()', () => {
+            it('should end successful', (done) => {
+                try{
+                    let res = new MockResponse({
+                        statusCode: 201,
+                        body: testResource
+                    }, done);
+
+                    let service = sinon.createStubInstance(ChannelServiceHandler);
+                    service.handleCreateConversation = sinon.stub().resolves(testResource);
+
+                    let channel = new ChannelServiceRoutes(service);
+                    channel.processCreateConversation(req, res);
+                } catch (error) {
+                    done(error);
+                } 
+            });
+        });
+
+        describe('processGetConversations()', () => {
+            it('should end successful', (done) => {
+                try{
+                    let res = new MockResponse({
+                        statusCode: 200,
+                        body: testResource
+                    }, done);
+
+                    let service = sinon.createStubInstance(ChannelServiceHandler);
+                    service.handleGetConversations = sinon.stub().resolves(testResource);
+
+                    let channel = new ChannelServiceRoutes(service);
+                    channel.processGetConversations(req, res);
+                } catch (error) {
+                    done(error);
+                } 
+            });
+        });
+
+        describe('processGetConversationMembers()', () => {
+            it('should end successful', (done) => {
+                try{
+                    let res = new MockResponse({
+                        statusCode: 200,
+                        body: testResource
+                    }, done);
+
+                    let service = sinon.createStubInstance(ChannelServiceHandler);
+                    service.handleGetConversationMembers = sinon.stub().resolves(testResource);
+
+                    let channel = new ChannelServiceRoutes(service);
+                    channel.processGetConversationMembers(req, res);
+                } catch (error) {
+                    done(error);
+                } 
+            });
+        });
+
+        describe('processGetConversationPagedMembers()', () => {
+            it('should end successful', (done) => {
+                try{
+                    let res = new MockResponse({
+                        statusCode: 200,
+                        body: testResource
+                    }, done);
+
+                    let service = sinon.createStubInstance(ChannelServiceHandler);
+                    service.handleGetConversationPagedMembers = sinon.stub().resolves(testResource);
+
+                    let channel = new ChannelServiceRoutes(service);
+                    channel.processGetConversationPagedMembers(req, res);
+                } catch (error) {
+                    done(error);
+                } 
+            });
+        });
+
+        describe('processDeleteConversationMember()', () => {
+            it('should end successful', (done) => {
+                try{
+                    let res = new MockResponse({
+                        statusCode: 200,
+                        body: {}
+                    }, done);
+
+                    let service = sinon.createStubInstance(ChannelServiceHandler);
+                    service.handleDeleteConversationMember = sinon.stub().resolves(testResource);
+
+                    let channel = new ChannelServiceRoutes(service);
+                    channel.processDeleteConversationMember(req, res);
+                } catch (error) {
+                    done(error);
+                } 
+            });
+        });
+
+        describe('processSendConversationHistory()', () => {
+            it('should end successful', (done) => {
+                try{
+                    let res = new MockResponse({
+                        statusCode: 200,
+                        body: testResource
+                    }, done);
+
+                    let service = sinon.createStubInstance(ChannelServiceHandler);
+                    service.handleSendConversationHistory = sinon.stub().resolves(testResource);
+
+                    let channel = new ChannelServiceRoutes(service);
+                    channel.processSendConversationHistory(req, res);
+                } catch (error) {
+                    done(error);
+                } 
+            });
+        });
+
+        describe('processUploadAttachment()', () => {
+            it('should end successful', (done) => {
+                try{
+                    let res = new MockResponse({
+                        statusCode: 200,
+                        body: testResource
+                    }, done);
+
+                    let service = sinon.createStubInstance(ChannelServiceHandler);
+                    service.handleUploadAttachment = sinon.stub().resolves(testResource);
+
+                    let channel = new ChannelServiceRoutes(service);
+                    channel.processUploadAttachment(req, res);
+                } catch (error) {
+                    done(error);
+                } 
             });
         });
 
@@ -166,7 +311,7 @@ describe('channelServiceRoutes', function() {
                 let req = sinon.mock(WebRequest);
                 req.body = {};
 
-                ExposedChannelServiceRoutes.readActivity(req).catch(err => {
+                ChannelServiceRoutes.readActivity(req).catch(err => {
                     assert.strictEqual(err.statusCode, StatusCodes.BAD_REQUEST);
                 });
             });
@@ -180,7 +325,7 @@ describe('channelServiceRoutes', function() {
                     localTimeStamp: Date.now(),
                 };
 
-                ExposedChannelServiceRoutes.readActivity(req).then((activity) => {
+                ChannelServiceRoutes.readActivity(req).then((activity) => {
                     assert.strictEqual(activity.type, 'testactivity');
                 });
             });

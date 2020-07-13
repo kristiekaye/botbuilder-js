@@ -82,7 +82,7 @@ describe('channelServiceRoutes', function() {
             },
             executeHandler(handler, attr) {
                 if (!!handlers[handler] && typeof handlers[handler] == 'function') {
-                    handlers[handler](attr)
+                    handlers[handler](attr);
                 }
             }
         };
@@ -798,7 +798,7 @@ describe('channelServiceRoutes', function() {
                 const request = {
                     ...req,
                     body: null
-                }
+                };
 
                 setTimeout(() => {
                     request.executeHandler('data', JSON.stringify(source));
@@ -806,7 +806,7 @@ describe('channelServiceRoutes', function() {
                 }, 100);
 
                 ChannelServiceRoutes.readBody(request).then((body) => {
-                    assert.deepStrictEqual(body, source, `expected: ${JSON.stringify(source)}. received: ${JSON.stringify(body)}`)
+                    assert.deepStrictEqual(body, source, `expected: ${ JSON.stringify(source) }. received: ${ JSON.stringify(body) }`);
                 });
             });
         });

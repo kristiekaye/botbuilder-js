@@ -68,14 +68,25 @@ describe('channelServiceRoutes', function () {
     });
 
     describe('private functions', () => {
+        const handlers = {};
+
         const req = {
             body: {
                 type: ''
             },
             headers: {},
             params: {},
-            query: {}
+            query: {},
+            on(handler, callback) {
+                handlers[handler] = callback;
+            },
+            executeHandler(handler, attr) {
+                if (!!handlers[handler] && typeof handlers[handler] == 'function') {
+                    handlers[handler](attr)
+                }
+            }
         };
+
         const testResource = { id: 'testId' };
 
         const errorHandler = ChannelServiceRoutes.handleError;
@@ -776,6 +787,26 @@ describe('channelServiceRoutes', function () {
 
                 ChannelServiceRoutes.readActivity(req).then((activity) => {
                     assert.strictEqual(activity.type, 'testactivity');
+                });
+            });
+        });
+
+        describe('readBody()', async () => {
+            it('should return request.body from "on" events', async () => {
+                const source = { test: true };
+
+                const request = {
+                    ...req,
+                    body: null
+                }
+
+                setTimeout(() => {
+                    request.executeHandler('data', JSON.stringify(source));
+                    request.executeHandler('end');
+                }, 100);
+
+                ChannelServiceRoutes.readBody(request).then((body) => {
+                    assert.deepStrictEqual(body, source, `expected: ${JSON.stringify(source)}. received: ${JSON.stringify(body)}`)
                 });
             });
         });

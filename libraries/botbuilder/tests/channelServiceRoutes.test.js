@@ -69,7 +69,6 @@ describe('channelServiceRoutes', function() {
 
     describe('private functions', () => {
         const handlers = {};
-
         const req = {
             body: {
                 type: ''
@@ -86,9 +85,7 @@ describe('channelServiceRoutes', function() {
                 }
             }
         };
-
         const testResource = { id: 'testId' };
-
         const errorHandler = ChannelServiceRoutes.handleError;
         let readActivityStub;
         let readBodyStub;
@@ -106,15 +103,15 @@ describe('channelServiceRoutes', function() {
         describe('processSendToConversation()', () => {
             it('should end successful', (done) => {
                 try {
-                    let res = new MockResponse({
+                    const res = new MockResponse({
                         statusCode: 200,
                         body: testResource
                     }, done);
 
-                    let service = sinon.createStubInstance(ChannelServiceHandler);
+                    const service = sinon.createStubInstance(ChannelServiceHandler);
                     service.handleSendToConversation = sinon.stub().resolves(testResource);
 
-                    let channel = new ChannelServiceRoutes(service);
+                    const channel = new ChannelServiceRoutes(service);
                     channel.processSendToConversation(req, res);
                 } catch (err) {
                     done(err);
@@ -124,22 +121,19 @@ describe('channelServiceRoutes', function() {
             it('should throw a handleSendToConversation error', done => {
                 try {
                     const resourceResponse = { error: 'handleSendToConversation error' };
-
-                    ChannelServiceRoutes.handleError = (err, res) => {
-                        assert.deepStrictEqual(err, resourceResponse, `expected: ${ JSON.stringify(resourceResponse) }. received: ${ JSON.stringify(err) }`);
-                        done();
-                    };
-
-                    const service = sinon.createStubInstance(ChannelServiceHandler);
-                    service.handleSendToConversation = sinon.stub().rejects(resourceResponse);
-
-                    const channel = new ChannelServiceRoutes(service);
-
                     const res = new MockResponse({
                         statusCode: 200,
                         body: resourceResponse
                     }, done);
 
+                    ChannelServiceRoutes.handleError = (err) => {
+                        assert.deepStrictEqual(err, resourceResponse, `expected: ${ JSON.stringify(resourceResponse) }. received: ${ JSON.stringify(err) }`);
+                        done();
+                    };
+                    const service = sinon.createStubInstance(ChannelServiceHandler);
+                    service.handleSendToConversation = sinon.stub().rejects(resourceResponse);
+
+                    const channel = new ChannelServiceRoutes(service);
                     channel.processSendToConversation(req, res);
                 } catch (error) {
                     done(error);
@@ -149,8 +143,12 @@ describe('channelServiceRoutes', function() {
             it('should throw a readActivity error', done => {
                 try {
                     const resourceResponse = { error: 'readActivity error' };
+                    const res = new MockResponse({
+                        statusCode: 200,
+                        body: resourceResponse
+                    }, done);
 
-                    ChannelServiceRoutes.handleError = (err, res) => {
+                    ChannelServiceRoutes.handleError = (err) => {
                         assert.deepStrictEqual(err, resourceResponse, `expected: ${ JSON.stringify(resourceResponse) }. received: ${ JSON.stringify(err) }`);
                         done();
                     };
@@ -161,12 +159,6 @@ describe('channelServiceRoutes', function() {
                     readActivityStub.rejects(resourceResponse);
 
                     const channel = new ChannelServiceRoutes(service);
-
-                    const res = new MockResponse({
-                        statusCode: 200,
-                        body: resourceResponse
-                    }, done);
-
                     channel.processSendToConversation(req, res);
                 } catch (error) {
                     done(error);
@@ -177,15 +169,15 @@ describe('channelServiceRoutes', function() {
         describe('processReplyToActivity()', () => {
             it('should end successful', (done) => {
                 try {
-                    let res = new MockResponse({
+                    const res = new MockResponse({
                         statusCode: 200,
                         body: testResource
                     }, done);
 
-                    let service = sinon.createStubInstance(ChannelServiceHandler);
+                    const service = sinon.createStubInstance(ChannelServiceHandler);
                     service.handleReplyToActivity = sinon.stub().resolves(testResource);
 
-                    let channel = new ChannelServiceRoutes(service);
+                    const channel = new ChannelServiceRoutes(service);
                     channel.processReplyToActivity(req, res);
                 } catch (error) {
                     done(error);
@@ -195,8 +187,12 @@ describe('channelServiceRoutes', function() {
             it('should throw a handleReplyToActivity error', done => {
                 try {
                     const resourceResponse = { error: 'handleReplyToActivity error' };
+                    const res = new MockResponse({
+                        statusCode: 200,
+                        body: resourceResponse
+                    }, done);
 
-                    ChannelServiceRoutes.handleError = (err, res) => {
+                    ChannelServiceRoutes.handleError = (err) => {
                         assert.deepStrictEqual(err, resourceResponse, `expected: ${ JSON.stringify(resourceResponse) }. received: ${ JSON.stringify(err) }`);
                         done();
                     };
@@ -205,12 +201,6 @@ describe('channelServiceRoutes', function() {
                     service.handleReplyToActivity = sinon.stub().rejects(resourceResponse);
 
                     const channel = new ChannelServiceRoutes(service);
-
-                    const res = new MockResponse({
-                        statusCode: 200,
-                        body: resourceResponse
-                    }, done);
-
                     channel.processReplyToActivity(req, res);
                 } catch (error) {
                     done(error);
@@ -220,8 +210,12 @@ describe('channelServiceRoutes', function() {
             it('should throw a readActivity error', done => {
                 try {
                     const resourceResponse = { error: 'readActivity error' };
+                    const res = new MockResponse({
+                        statusCode: 200,
+                        body: resourceResponse
+                    }, done);
 
-                    ChannelServiceRoutes.handleError = (err, res) => {
+                    ChannelServiceRoutes.handleError = (err) => {
                         assert.deepStrictEqual(err, resourceResponse, `expected: ${ JSON.stringify(resourceResponse) }. received: ${ JSON.stringify(err) }`);
                         done();
                     };
@@ -232,12 +226,6 @@ describe('channelServiceRoutes', function() {
                     readActivityStub.rejects(resourceResponse);
 
                     const channel = new ChannelServiceRoutes(service);
-
-                    const res = new MockResponse({
-                        statusCode: 200,
-                        body: resourceResponse
-                    }, done);
-
                     channel.processReplyToActivity(req, res);
                 } catch (error) {
                     done(error);
@@ -248,15 +236,15 @@ describe('channelServiceRoutes', function() {
         describe('processUpdateActivity()', () => {
             it('should end successful', (done) => {
                 try {
-                    let res = new MockResponse({
+                    const res = new MockResponse({
                         statusCode: 200,
                         body: testResource
                     }, done);
 
-                    let service = sinon.createStubInstance(ChannelServiceHandler);
+                    const service = sinon.createStubInstance(ChannelServiceHandler);
                     service.handleUpdateActivity = sinon.stub().resolves(testResource);
 
-                    let channel = new ChannelServiceRoutes(service);
+                    const channel = new ChannelServiceRoutes(service);
                     channel.processUpdateActivity(req, res);
                 } catch (error) {
                     done(error);
@@ -266,8 +254,12 @@ describe('channelServiceRoutes', function() {
             it('should throw a handleUpdateActivity error', done => {
                 try {
                     const resourceResponse = { error: 'handleUpdateActivity error' };
+                    const res = new MockResponse({
+                        statusCode: 200,
+                        body: resourceResponse
+                    }, done);
 
-                    ChannelServiceRoutes.handleError = (err, res) => {
+                    ChannelServiceRoutes.handleError = (err) => {
                         assert.deepStrictEqual(err, resourceResponse, `expected: ${ JSON.stringify(resourceResponse) }. received: ${ JSON.stringify(err) }`);
                         done();
                     };
@@ -276,12 +268,6 @@ describe('channelServiceRoutes', function() {
                     service.handleUpdateActivity = sinon.stub().rejects(resourceResponse);
 
                     const channel = new ChannelServiceRoutes(service);
-
-                    const res = new MockResponse({
-                        statusCode: 200,
-                        body: resourceResponse
-                    }, done);
-
                     channel.processUpdateActivity(req, res);
                 } catch (error) {
                     done(error);
@@ -291,8 +277,12 @@ describe('channelServiceRoutes', function() {
             it('should throw a readActivity error', done => {
                 try {
                     const resourceResponse = { error: 'readActivity error' };
+                    const res = new MockResponse({
+                        statusCode: 200,
+                        body: resourceResponse
+                    }, done);
 
-                    ChannelServiceRoutes.handleError = (err, res) => {
+                    ChannelServiceRoutes.handleError = (err) => {
                         assert.deepStrictEqual(err, resourceResponse, `expected: ${ JSON.stringify(resourceResponse) }. received: ${ JSON.stringify(err) }`);
                         done();
                     };
@@ -303,12 +293,6 @@ describe('channelServiceRoutes', function() {
                     readActivityStub.rejects(resourceResponse);
 
                     const channel = new ChannelServiceRoutes(service);
-
-                    const res = new MockResponse({
-                        statusCode: 200,
-                        body: resourceResponse
-                    }, done);
-
                     channel.processUpdateActivity(req, res);
                 } catch (error) {
                     done(error);
@@ -319,15 +303,15 @@ describe('channelServiceRoutes', function() {
         describe('processDeleteActivity()', () => {
             it('should end successful', (done) => {
                 try {
-                    let res = new MockResponse({
+                    const res = new MockResponse({
                         statusCode: 200,
                         body: {}
                     }, done);
 
-                    let service = sinon.createStubInstance(ChannelServiceHandler);
+                    const service = sinon.createStubInstance(ChannelServiceHandler);
                     service.handleDeleteActivity = sinon.stub().resolves();
 
-                    let channel = new ChannelServiceRoutes(service);
+                    const channel = new ChannelServiceRoutes(service);
                     channel.processDeleteActivity(req, res);
                 } catch (error) {
                     done(error);
@@ -337,8 +321,12 @@ describe('channelServiceRoutes', function() {
             it('should throw a handleDeleteActivity error', done => {
                 try {
                     const resourceResponse = { error: 'handleDeleteActivity error' };
+                    const res = new MockResponse({
+                        statusCode: 200,
+                        body: resourceResponse
+                    }, done);
 
-                    ChannelServiceRoutes.handleError = (err, res) => {
+                    ChannelServiceRoutes.handleError = (err) => {
                         assert.deepStrictEqual(err, resourceResponse, `expected: ${ JSON.stringify(resourceResponse) }. received: ${ JSON.stringify(err) }`);
                         done();
                     };
@@ -347,12 +335,6 @@ describe('channelServiceRoutes', function() {
                     service.handleDeleteActivity = sinon.stub().rejects(resourceResponse);
 
                     const channel = new ChannelServiceRoutes(service);
-
-                    const res = new MockResponse({
-                        statusCode: 200,
-                        body: resourceResponse
-                    }, done);
-
                     channel.processDeleteActivity(req, res);
                 } catch (error) {
                     done(error);
@@ -363,15 +345,15 @@ describe('channelServiceRoutes', function() {
         describe('processGetActivityMembers()', () => {
             it('should end successful', (done) => {
                 try {
-                    let res = new MockResponse({
+                    const res = new MockResponse({
                         statusCode: 200,
                         body: testResource
                     }, done);
 
-                    let service = sinon.createStubInstance(ChannelServiceHandler);
+                    const service = sinon.createStubInstance(ChannelServiceHandler);
                     service.handleGetActivityMembers = sinon.stub().resolves(testResource);
 
-                    let channel = new ChannelServiceRoutes(service);
+                    const channel = new ChannelServiceRoutes(service);
                     channel.processGetActivityMembers(req, res);
                 } catch (error) {
                     done(error);
@@ -381,8 +363,12 @@ describe('channelServiceRoutes', function() {
             it('should throw a handleGetActivityMembers error', done => {
                 try {
                     const resourceResponse = { error: 'handleGetActivityMembers error' };
+                    const res = new MockResponse({
+                        statusCode: 200,
+                        body: resourceResponse
+                    }, done);
 
-                    ChannelServiceRoutes.handleError = (err, res) => {
+                    ChannelServiceRoutes.handleError = (err) => {
                         assert.deepStrictEqual(err, resourceResponse, `expected: ${ JSON.stringify(resourceResponse) }. received: ${ JSON.stringify(err) }`);
                         done();
                     };
@@ -391,12 +377,6 @@ describe('channelServiceRoutes', function() {
                     service.handleGetActivityMembers = sinon.stub().rejects(resourceResponse);
 
                     const channel = new ChannelServiceRoutes(service);
-
-                    const res = new MockResponse({
-                        statusCode: 200,
-                        body: resourceResponse
-                    }, done);
-
                     channel.processGetActivityMembers(req, res);
                 } catch (error) {
                     done(error);
@@ -407,15 +387,15 @@ describe('channelServiceRoutes', function() {
         describe('processCreateConversation()', () => {
             it('should end successful', (done) => {
                 try {
-                    let res = new MockResponse({
+                    const res = new MockResponse({
                         statusCode: 201,
                         body: testResource
                     }, done);
 
-                    let service = sinon.createStubInstance(ChannelServiceHandler);
+                    const service = sinon.createStubInstance(ChannelServiceHandler);
                     service.handleCreateConversation = sinon.stub().resolves(testResource);
 
-                    let channel = new ChannelServiceRoutes(service);
+                    const channel = new ChannelServiceRoutes(service);
                     channel.processCreateConversation(req, res);
                 } catch (error) {
                     done(error);
@@ -425,8 +405,12 @@ describe('channelServiceRoutes', function() {
             it('should throw a handleCreateConversation error', done => {
                 try {
                     const resourceResponse = { error: 'handleCreateConversation error' };
+                    const res = new MockResponse({
+                        statusCode: 200,
+                        body: resourceResponse
+                    }, done);
 
-                    ChannelServiceRoutes.handleError = (err, res) => {
+                    ChannelServiceRoutes.handleError = (err) => {
                         assert.deepStrictEqual(err, resourceResponse, `expected: ${ JSON.stringify(resourceResponse) }. received: ${ JSON.stringify(err) }`);
                         done();
                     };
@@ -435,12 +419,6 @@ describe('channelServiceRoutes', function() {
                     service.handleCreateConversation = sinon.stub().rejects(resourceResponse);
 
                     const channel = new ChannelServiceRoutes(service);
-
-                    const res = new MockResponse({
-                        statusCode: 200,
-                        body: resourceResponse
-                    }, done);
-
                     channel.processCreateConversation(req, res);
                 } catch (error) {
                     done(error);
@@ -451,15 +429,15 @@ describe('channelServiceRoutes', function() {
         describe('processGetConversations()', () => {
             it('should end successful', (done) => {
                 try {
-                    let res = new MockResponse({
+                    const res = new MockResponse({
                         statusCode: 200,
                         body: testResource
                     }, done);
 
-                    let service = sinon.createStubInstance(ChannelServiceHandler);
+                    const service = sinon.createStubInstance(ChannelServiceHandler);
                     service.handleGetConversations = sinon.stub().resolves(testResource);
 
-                    let channel = new ChannelServiceRoutes(service);
+                    const channel = new ChannelServiceRoutes(service);
                     channel.processGetConversations(req, res);
                 } catch (error) {
                     done(error);
@@ -469,8 +447,12 @@ describe('channelServiceRoutes', function() {
             it('should throw a handleGetConversations error', done => {
                 try {
                     const resourceResponse = { error: 'handleGetConversations error' };
+                    const res = new MockResponse({
+                        statusCode: 200,
+                        body: resourceResponse
+                    }, done);
 
-                    ChannelServiceRoutes.handleError = (err, res) => {
+                    ChannelServiceRoutes.handleError = (err) => {
                         assert.deepStrictEqual(err, resourceResponse, `expected: ${ JSON.stringify(resourceResponse) }. received: ${ JSON.stringify(err) }`);
                         done();
                     };
@@ -479,12 +461,6 @@ describe('channelServiceRoutes', function() {
                     service.handleGetConversations = sinon.stub().rejects(resourceResponse);
 
                     const channel = new ChannelServiceRoutes(service);
-
-                    const res = new MockResponse({
-                        statusCode: 200,
-                        body: resourceResponse
-                    }, done);
-
                     channel.processGetConversations(req, res);
                 } catch (error) {
                     done(error);
@@ -495,15 +471,15 @@ describe('channelServiceRoutes', function() {
         describe('processGetConversationMembers()', () => {
             it('should end successful', (done) => {
                 try {
-                    let res = new MockResponse({
+                    const res = new MockResponse({
                         statusCode: 200,
                         body: testResource
                     }, done);
 
-                    let service = sinon.createStubInstance(ChannelServiceHandler);
+                    const service = sinon.createStubInstance(ChannelServiceHandler);
                     service.handleGetConversationMembers = sinon.stub().resolves(testResource);
 
-                    let channel = new ChannelServiceRoutes(service);
+                    const channel = new ChannelServiceRoutes(service);
                     channel.processGetConversationMembers(req, res);
                 } catch (error) {
                     done(error);
@@ -513,8 +489,12 @@ describe('channelServiceRoutes', function() {
             it('should throw a handleGetConversationMembers error', done => {
                 try {
                     const resourceResponse = { error: 'handleGetConversationMembers error' };
+                    const res = new MockResponse({
+                        statusCode: 200,
+                        body: resourceResponse
+                    }, done);
 
-                    ChannelServiceRoutes.handleError = (err, res) => {
+                    ChannelServiceRoutes.handleError = (err) => {
                         assert.deepStrictEqual(err, resourceResponse, `expected: ${ JSON.stringify(resourceResponse) }. received: ${ JSON.stringify(err) }`);
                         done();
                     };
@@ -523,12 +503,6 @@ describe('channelServiceRoutes', function() {
                     service.handleGetConversationMembers = sinon.stub().rejects(resourceResponse);
 
                     const channel = new ChannelServiceRoutes(service);
-
-                    const res = new MockResponse({
-                        statusCode: 200,
-                        body: resourceResponse
-                    }, done);
-
                     channel.processGetConversationMembers(req, res);
                 } catch (error) {
                     done(error);
@@ -539,15 +513,15 @@ describe('channelServiceRoutes', function() {
         describe('processGetConversationPagedMembers()', () => {
             it('should end successful', (done) => {
                 try {
-                    let res = new MockResponse({
+                    const res = new MockResponse({
                         statusCode: 200,
                         body: testResource
                     }, done);
 
-                    let service = sinon.createStubInstance(ChannelServiceHandler);
+                    const service = sinon.createStubInstance(ChannelServiceHandler);
                     service.handleGetConversationPagedMembers = sinon.stub().resolves(testResource);
 
-                    let channel = new ChannelServiceRoutes(service);
+                    const channel = new ChannelServiceRoutes(service);
                     channel.processGetConversationPagedMembers(req, res);
                 } catch (error) {
                     done(error);
@@ -557,8 +531,12 @@ describe('channelServiceRoutes', function() {
             it('should throw a handleGetConversationPagedMembers error', done => {
                 try {
                     const resourceResponse = { error: 'handleGetConversationPagedMembers error' };
+                    const res = new MockResponse({
+                        statusCode: 200,
+                        body: resourceResponse
+                    }, done);
 
-                    ChannelServiceRoutes.handleError = (err, res) => {
+                    ChannelServiceRoutes.handleError = (err) => {
                         assert.deepStrictEqual(err, resourceResponse, `expected: ${ JSON.stringify(resourceResponse) }. received: ${ JSON.stringify(err) }`);
                         done();
                     };
@@ -567,12 +545,6 @@ describe('channelServiceRoutes', function() {
                     service.handleGetConversationPagedMembers = sinon.stub().rejects(resourceResponse);
 
                     const channel = new ChannelServiceRoutes(service);
-
-                    const res = new MockResponse({
-                        statusCode: 200,
-                        body: resourceResponse
-                    }, done);
-
                     channel.processGetConversationPagedMembers(req, res);
                 } catch (error) {
                     done(error);
@@ -583,15 +555,15 @@ describe('channelServiceRoutes', function() {
         describe('processDeleteConversationMember()', () => {
             it('should end successful', (done) => {
                 try {
-                    let res = new MockResponse({
+                    const res = new MockResponse({
                         statusCode: 200,
                         body: {}
                     }, done);
 
-                    let service = sinon.createStubInstance(ChannelServiceHandler);
+                    const service = sinon.createStubInstance(ChannelServiceHandler);
                     service.handleDeleteConversationMember = sinon.stub().resolves(testResource);
 
-                    let channel = new ChannelServiceRoutes(service);
+                    const channel = new ChannelServiceRoutes(service);
                     channel.processDeleteConversationMember(req, res);
                 } catch (error) {
                     done(error);
@@ -601,8 +573,12 @@ describe('channelServiceRoutes', function() {
             it('should throw a handleDeleteConversationMember error', done => {
                 try {
                     const resourceResponse = { error: 'handleDeleteConversationMember error' };
+                    const res = new MockResponse({
+                        statusCode: 200,
+                        body: resourceResponse
+                    }, done);
 
-                    ChannelServiceRoutes.handleError = (err, res) => {
+                    ChannelServiceRoutes.handleError = (err) => {
                         assert.deepStrictEqual(err, resourceResponse, `expected: ${ JSON.stringify(resourceResponse) }. received: ${ JSON.stringify(err) }`);
                         done();
                     };
@@ -611,12 +587,6 @@ describe('channelServiceRoutes', function() {
                     service.handleDeleteConversationMember = sinon.stub().rejects(resourceResponse);
 
                     const channel = new ChannelServiceRoutes(service);
-
-                    const res = new MockResponse({
-                        statusCode: 200,
-                        body: resourceResponse
-                    }, done);
-
                     channel.processDeleteConversationMember(req, res);
                 } catch (error) {
                     done(error);
@@ -627,15 +597,15 @@ describe('channelServiceRoutes', function() {
         describe('processSendConversationHistory()', () => {
             it('should end successful', (done) => {
                 try {
-                    let res = new MockResponse({
+                    const res = new MockResponse({
                         statusCode: 200,
                         body: testResource
                     }, done);
 
-                    let service = sinon.createStubInstance(ChannelServiceHandler);
+                    const service = sinon.createStubInstance(ChannelServiceHandler);
                     service.handleSendConversationHistory = sinon.stub().resolves(testResource);
 
-                    let channel = new ChannelServiceRoutes(service);
+                    const channel = new ChannelServiceRoutes(service);
                     channel.processSendConversationHistory(req, res);
                 } catch (error) {
                     done(error);
@@ -645,8 +615,12 @@ describe('channelServiceRoutes', function() {
             it('should throw a handleSendConversationHistory error', done => {
                 try {
                     const resourceResponse = { error: 'handleSendConversationHistory error' };
+                    const res = new MockResponse({
+                        statusCode: 200,
+                        body: resourceResponse
+                    }, done);
 
-                    ChannelServiceRoutes.handleError = (err, res) => {
+                    ChannelServiceRoutes.handleError = (err) => {
                         assert.deepStrictEqual(err, resourceResponse, `expected: ${ JSON.stringify(resourceResponse) }. received: ${ JSON.stringify(err) }`);
                         done();
                     };
@@ -655,12 +629,6 @@ describe('channelServiceRoutes', function() {
                     service.handleSendConversationHistory = sinon.stub().rejects(resourceResponse);
 
                     const channel = new ChannelServiceRoutes(service);
-
-                    const res = new MockResponse({
-                        statusCode: 200,
-                        body: resourceResponse
-                    }, done);
-
                     channel.processSendConversationHistory(req, res);
                 } catch (error) {
                     done(error);
@@ -670,8 +638,12 @@ describe('channelServiceRoutes', function() {
             it('should throw a readBody error', done => {
                 try {
                     const resourceResponse = { error: 'readBody error' };
+                    const res = new MockResponse({
+                        statusCode: 200,
+                        body: resourceResponse
+                    }, done);
 
-                    ChannelServiceRoutes.handleError = (err, res) => {
+                    ChannelServiceRoutes.handleError = (err) => {
                         assert.deepStrictEqual(err, resourceResponse, `expected: ${ JSON.stringify(resourceResponse) }. received: ${ JSON.stringify(err) }`);
                         done();
                     };
@@ -682,12 +654,6 @@ describe('channelServiceRoutes', function() {
                     readBodyStub.rejects(resourceResponse);
 
                     const channel = new ChannelServiceRoutes(service);
-
-                    const res = new MockResponse({
-                        statusCode: 200,
-                        body: resourceResponse
-                    }, done);
-
                     channel.processSendConversationHistory(req, res);
                 } catch (error) {
                     done(error);
@@ -716,8 +682,12 @@ describe('channelServiceRoutes', function() {
             it('should throw a handleUploadAttachment error', done => {
                 try {
                     const resourceResponse = { error: 'handleUploadAttachment error' };
+                    const res = new MockResponse({
+                        statusCode: 200,
+                        body: resourceResponse
+                    }, done);
 
-                    ChannelServiceRoutes.handleError = (err, res) => {
+                    ChannelServiceRoutes.handleError = (err) => {
                         assert.deepStrictEqual(err, resourceResponse, `expected: ${ JSON.stringify(resourceResponse) }. received: ${ JSON.stringify(err) }`);
                         done();
                     };
@@ -726,12 +696,6 @@ describe('channelServiceRoutes', function() {
                     service.handleUploadAttachment = sinon.stub().rejects(resourceResponse);
 
                     const channel = new ChannelServiceRoutes(service);
-
-                    const res = new MockResponse({
-                        statusCode: 200,
-                        body: resourceResponse
-                    }, done);
-
                     channel.processUploadAttachment(req, res);
                 } catch (error) {
                     done(error);
@@ -741,8 +705,12 @@ describe('channelServiceRoutes', function() {
             it('should throw a readBody error', done => {
                 try {
                     const resourceResponse = { error: 'readBody error' };
+                    const res = new MockResponse({
+                        statusCode: 200,
+                        body: resourceResponse
+                    }, done);
 
-                    ChannelServiceRoutes.handleError = (err, res) => {
+                    ChannelServiceRoutes.handleError = (err) => {
                         assert.deepStrictEqual(err, resourceResponse, `expected: ${ JSON.stringify(resourceResponse) }. received: ${ JSON.stringify(err) }`);
                         done();
                     };
@@ -753,12 +721,6 @@ describe('channelServiceRoutes', function() {
                     readBodyStub.rejects(resourceResponse);
 
                     const channel = new ChannelServiceRoutes(service);
-
-                    const res = new MockResponse({
-                        statusCode: 200,
-                        body: resourceResponse
-                    }, done);
-
                     channel.processUploadAttachment(req, res);
                 } catch (error) {
                     done(error);
@@ -768,7 +730,7 @@ describe('channelServiceRoutes', function() {
 
         describe('readActivity()', async () => {
             it('should throw with invalid body', async () => {
-                let req = sinon.mock(WebRequest);
+                const req = sinon.mock(WebRequest);
                 req.body = {};
 
                 ChannelServiceRoutes.readActivity(req).catch(err => {
@@ -777,7 +739,7 @@ describe('channelServiceRoutes', function() {
             });
 
             it('should return activity', async () => {
-                let req = sinon.mock(WebRequest);
+                const req = sinon.mock(WebRequest);
                 req.body = {
                     type: 'testactivity',
                     timestamp: Date.now(),
